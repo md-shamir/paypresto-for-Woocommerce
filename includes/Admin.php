@@ -1,7 +1,7 @@
 <?php 
-namespace ABC\RT;
+namespace PFW\RT;
 
-use ABC\RT\API\Admin\Settings_Route;
+use PFW\RT\API\Admin\Settings_Route;
 use Automattic\WooCommerce\Admin\Features\Settings;
 
 class Admin {

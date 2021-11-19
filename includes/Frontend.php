@@ -1,5 +1,5 @@
 <?php 
-namespace ABC\RT;
+namespace PFW\RT;
 
 class Frontend {
 

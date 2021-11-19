@@ -11,11 +11,9 @@
     "require": {},
     "autoload": {
         "psr-4": {
-            "WPVK\\Admin\\": "admin/",
-            "WPVK\\Frontend\\": "frontend/",
-            "WPVK\\Includes\\": "includes/",
-            "WPVK\\Api\\": "api/"
-        }
+            "PFW\\RT\\": "includes/"
+        },
+        "files": ["includes/functions.php"]
     },
     "require-dev": {
     }

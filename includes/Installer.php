@@ -1,13 +1,13 @@
 <?php 
-namespace ABC\RT;
+namespace PFW\RT;
 /**
  * Run installer 
  */
 class Installer {
-    // public function run() {
-    //     $this->add_version();
-    //     $this->create_tables();
-    // }
+    public function run() {
+        // $this->add_version();
+        // $this->create_tables();
+    }
 
     // public function add_version(){
     //     $installed = get_option('abc_installed');

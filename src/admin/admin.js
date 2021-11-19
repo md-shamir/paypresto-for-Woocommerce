@@ -29,7 +29,7 @@ const router = new VueRouter({
 })
 
 new Vue({
-    el: '#wpvk-admin-app',
+    el: '#paypresto-admin-app',
     store,
     router,
     render: h => h( App )

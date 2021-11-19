@@ -4,50 +4,36 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInite0fd93276d74ff75e6985abf85e86bf3
+class ComposerStaticInit3d7c40824631f74be8bfc0605a577bd2
 {
+    public static $files = array (
+        'be5431179f02cea393c1ed86a49b5637' => __DIR__ . '/../..' . '/includes/functions.php',
+    );
+
     public static $prefixLengthsPsr4 = array (
-        'W' => 
+        'P' => 
         array (
-            'WPVK\\Includes\\' => 14,
-            'WPVK\\Frontend\\' => 14,
-            'WPVK\\Api\\' => 9,
-            'WPVK\\Admin\\' => 11,
+            'PFW\\RT\\' => 7,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'WPVK\\Includes\\' => 
+        'PFW\\RT\\' => 
         array (
             0 => __DIR__ . '/../..' . '/includes',
-        ),
-        'WPVK\\Frontend\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/frontend',
-        ),
-        'WPVK\\Api\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/api',
-        ),
-        'WPVK\\Admin\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/admin',
         ),
     );
 
     public static $classMap = array (
-        'WPVK\\Api\\Api' => __DIR__ . '/../..' . '/api/Api.php',
-        'WPVK\\Includes\\Admin' => __DIR__ . '/../..' . '/includes/Admin.php',
-        'WPVK\\Includes\\Assets' => __DIR__ . '/../..' . '/includes/Assets.php',
-        'WPVK\\Includes\\Frontend' => __DIR__ . '/../..' . '/includes/Frontend.php',
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInite0fd93276d74ff75e6985abf85e86bf3::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInite0fd93276d74ff75e6985abf85e86bf3::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInite0fd93276d74ff75e6985abf85e86bf3::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit3d7c40824631f74be8bfc0605a577bd2::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit3d7c40824631f74be8bfc0605a577bd2::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit3d7c40824631f74be8bfc0605a577bd2::$classMap;
 
         }, null, ClassLoader::class);
     }

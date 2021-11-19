@@ -1,8 +1,8 @@
 <?php 
-// namespace ABC\RT\API\Admin;
-// use WP_REST_Controller;
+namespace ABC\RT\API\Admin;
+use WP_REST_Controller;
 
-// class Settings_Route extends WP_REST_Controller {
+class Settings_Route extends WP_REST_Controller {
 
 //     protected $namespace;
 //     protected $rest_base;
@@ -70,4 +70,4 @@
 //     }
 
 
-// }
+}

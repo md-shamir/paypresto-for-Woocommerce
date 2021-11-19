@@ -1,6 +1,6 @@
 <template>
-    <div id="vue-backend-app">
-        <h1>WP Vue KickStart</h1>
+    <div id="paypresto-admin-app">
+        <h1>Paypresto option panel</h1>
         <router-view name="tab"></router-view>
         <router-view></router-view>
     </div>
