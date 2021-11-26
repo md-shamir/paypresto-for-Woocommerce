@@ -23,9 +23,8 @@ function init_paypresto_gateway(){
             $this->title = $this->get_option('title');
             $this->description = $this->get_option( 'description' );
             $this->enabled = $this->get_option('enabled');
-            $this->testmode = $this->get_option('testmode');
-            $this->private_key = $this->testmode ? $this->get_option('test_private_key') : $this->get_option( 'private_key' );
-            $this->publishable_key = $this->testmode ? $this->get_option( 'test_publishable_key' ) : $this->get_option('publishable_key');
+            $this->paypresto_api =  $this->get_option('paypresto_api_key') ? $this->get_option( 'paypresto_api_key' ) : '';
+            $this->coin_ranking_api = $this->get_option( 'test_publishable_key' ) ? $this->get_option('publishable_key') : '';
             add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
             // We need custom JavaScript to obtain a token
             add_action( 'wp_enqueue_scripts', array( $this, 'payment_scripts' ) );
@@ -53,30 +52,30 @@ function init_paypresto_gateway(){
                     'description' => __('Please enter description for your payment gateway', 'rt-paypresto'),
                     'default' => __('Pay with Payprest payment method', 'rt-payprest'),                
                 ),
-                'testmode' => array(
-                    'title' => __('Test mode', 'rt-paypresto'),
-                    'label' => __('Enable test mode', 'rt-paypresto'),
-                    'type' => 'checkbox',
-                    'description' => __('Enable test mode to test your payment method'),
-                    'default' => 'yes',
-                    'desc_tip' => true
+                // 'testmode' => array(
+                //     'title' => __('Test mode', 'rt-paypresto'),
+                //     'label' => __('Enable test mode', 'rt-paypresto'),
+                //     'type' => 'checkbox',
+                //     'description' => __('Enable test mode to test your payment method'),
+                //     'default' => 'yes',
+                //     'desc_tip' => true
+                // ),
+                'paypresto_api_key' => array(
+                    'title'       => __('Paypresto API key', 'rt-paypresto'),
+                    'type'        => 'password'
                 ),
-                'test_publishable_key' => array(
-                    'title'       => __('Test Publishable Key', 'rt-paypresto'),
-                    'type'        => 'text'
-                ),
-                'test_private_key' => array(
-                    'title'       => __('Test Private Key', 'rt-paypresto'),
+                'coin_ranking_api_key' => array(
+                    'title'       => __('Coin Ranking API key', 'rt-paypresto'),
                     'type'        => 'password',
                 ),
-                'publishable_key' => array(
-                    'title'       => __('Live Publishable Key', 'rt-paypresto'),
-                    'type'        => 'text'
-                ),
-                'private_key' => array(
-                    'title'       => __('Live Private Key', 'rt-paypresto'),
-                    'type'        => 'password'
-                )
+                // 'publishable_key' => array(
+                //     'title'       => __('Live Publishable Key', 'rt-paypresto'),
+                //     'type'        => 'text'
+                // ),
+                // 'private_key' => array(
+                //     'title'       => __('Live Private Key', 'rt-paypresto'),
+                //     'type'        => 'password'
+                // )
             );
         }
     
@@ -134,14 +133,25 @@ function init_paypresto_gateway(){
     }
     
 }
-
+remove_action( 'woocommerce_checkout_order_review', 'woocommerce_order_review', 10 );
+add_filter('woocommerce_order_button_html', '__return_false' );
 add_filter( 'woocommerce_cart_needs_payment', '__return_false' );
-add_action('woocommerce_checkout_before_order_review', function(){
+add_action('woocommerce_after_checkout_form', function(){
     echo '<div id="rt-frontend-app"></div>';
 });
 
 // add_action('wp_footer', function(){
-//     WC()->cart->add_to_cart(1201);
+//     $wc_gateways      = new WC_Payment_Gateways();
+//     $payment_gateways = $wc_gateways->get_available_payment_gateways();
+
+//     // Loop through Woocommerce available payment gateways
+//     foreach( $payment_gateways as $gateway_id => $gateway ){
+//         $title = $gateway->get_title();
+//         $description = $gateway->get_description();
+//         $paypresto_api = $gateway->settings['paypresto_api_key'];
+//         $coin_ranking = $gateway->settings['coin_ranking_api_key'];
+//         echo $coin_ranking;
+//     }
 // });
 // add_action( 'wp_ajax_rt_checkout_process', 'rt_checkout_process' );
 // add_action( 'wp_ajax_nopriv_rt_checkout_process', 'rt_checkout_process' );

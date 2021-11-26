@@ -14,10 +14,16 @@
 <script>
 import {Presto, embed} from 'paypresto.js'
 import axios from 'axios';
+const Coinranking = require('coinranking-api');
+
 
   export default {
     data() {
       return {
+        title: '',
+        description: '',
+        payprestKey: '',
+        coinRankingKey: '',       
         spinner: true,
         name: '',
         nameState: null,
@@ -34,23 +40,38 @@ import axios from 'axios';
     },
     methods: {
     async openModal(){
+      var self = this;
         this.spinner = true;
         var formData = new FormData();
         formData.append('action', 'rt_checkout_process');
-        formData.append('security', RT_FRONTEND.security);
+        formData.append('security', RT_FRONTEND.security);  
         try{
         var response = await axios.post(RT_FRONTEND.ajaxURL, formData);
-        var obj = response.data.data.cart_items;
-            console.log(JSON.parse(obj));
           if( response.data.success ) {
-
+            var obj = response.data.data.cart_items;
+            var gateway = response.data.data.gateway_info;
+            var formatGateway = JSON.parse(gateway);
+            self.title = formatGateway[0].title;
+            self.description = formatGateway[0].description;
+            self.payprestKey = formatGateway[0].paypresto_api;
+            self.coinRankingKey = formatGateway[0].coin_ranking;
+            var jsObj = JSON.parse(obj);
+            var totalPrice = 0;
+            jsObj.forEach(item => {
+              totalPrice += parseFloat(item.price) * item.quantity;
+            });
+            const CoinrankingClient = new Coinranking();
+            let convert = await CoinrankingClient.coins.fetch(1509, {base: 'BSV'}) // usd 1509
+            let bsv = convert.data.data.coin.price * totalPrice;
+            let sats = bsv * 100000000;
+            let formatSats = Math.round(sats);
             setTimeout(() => {
                 
                 const payment = Presto.create({
-                key: '5KRBoTUQQtRwjJEPHz9MBou7UoMmUsb2afMSZR1QudF7UfctRSR',
-                description: 'My test payment',
+                key: self.payprestKey,
+                description: self.title,
                 outputs: [
-                    { to: '1CBTGrChDDGsewF1eAV6FQyxRaSXRvUT7o', satoshis: 1766 },
+                    { to: '1CBTGrChDDGsewF1eAV6FQyxRaSXRvUT7o', satoshis: formatSats },//(satoshi 100000000x1.00000 bsv)
                     { data: [Buffer.from("Hello world!")] }
                 ]
               })
@@ -62,13 +83,16 @@ import axios from 'axios';
               .on('error', erro => console.log(erro));
               payment
               .on('invoice', invoice => console.log(invoice))
-              .on('funded', payment => console.log(payment))
+              .on('funded', function(funded){
+                if( funded ) {
+                  completeCheckout();
+                }
+              })
               .on('success', txid => payment.pushTx(txid))
               .on('error', err => console.log(err))
 
               this.spinner = false;
               }, 1000);
-            
           } else {
             console.log(response);
           }
@@ -77,42 +101,7 @@ import axios from 'axios';
             console.log(error);
         }
 
-
-
-        // try {
-        //   let response = await axios.post( 'http://localhost/wordpress/paypresto/index.php/wp-admin/admin-ajax.php',
-        //   data
-        //   );
-        //   console.log(response);
-        // } catch( erro ){
-        //   console.log(erro);
-        // }
-
-
-        // this.spinner = true;
-        //     setTimeout(() => {
-        //       this.spinner = false;
-              
-        //       const payment = Presto.create({
-        //       key: '5KRBoTUQQtRwjJEPHz9MBou7UoMmUsb2afMSZR1QudF7UfctRSR',
-        //       description: 'My test payment',
-        //       outputs: [
-        //           { to: '1CBTGrChDDGsewF1eAV6FQyxRaSXRvUT7o', satoshis: 500 },
-        //           { data: [Buffer.from("Hello world!")] }
-        //       ]
-        //     })
-
-        //     payment
-        //     .mount(embed('#paypresto'))
-        //     .on('funded', payment => payment.pushTx())
-        //     .on('success', txid => console.log('TX sent', txid))
-        //     .on('error', erro => console.log(erro));
-        //     payment
-        //     .on('invoice', invoice => console.log(invoice))
-        //     .on('funded', payment => console.log(payment))
-        //     .on('success', txid => payment.pushTx(txid))
-        //     .on('error', err => console.log(err))
-        //     }, 1000);
+       
       },
       checkFormValidity() {
         const valid = this.$refs.form.checkValidity()
@@ -142,7 +131,19 @@ import axios from 'axios';
           this.$bvModal.hide('modal-prevent-closing')
         })
       }
+
     }
+  }
+  async function completeCheckout(){
+    var email = jQuery("#billing_email").val();
+    var formData = new FormData();
+        formData.append('action', 'rt_payment_process');
+        formData.append('customer_email', email);
+        formData.append('security', RT_FRONTEND.security);
+    var response = await axios.post(RT_FRONTEND.ajaxURL, formData);
+        if( response.data.success ) {
+          window.location.assign(response.data.data.redirect);
+        }
   }
 </script>
 <style>
@@ -155,5 +156,9 @@ import axios from 'axios';
       margin: 1.75rem auto;
       max-width: 741px;
   }
+  .form-row.place-order {
+    display: none !important;
+  }
 
 </style>
+

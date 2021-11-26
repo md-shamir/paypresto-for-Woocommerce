@@ -11,9 +11,13 @@
     "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
   },
   "dependencies": {
+    "bitcoin-units": "^0.3.0",
     "bootstrap": "^5.1.3",
     "bootstrap-vue": "^2.21.2",
     "bsv": "^2.0.10",
+    "coingecko-api": "^1.0.10",
+    "coinranking-api": "^1.0.0",
+    "nomics": "github:mikunimaru/nomics",
     "paypresto.js": "^0.1.0-beta.13",
     "txforge": "^0.2.5",
     "vue": "^2.6.11",
