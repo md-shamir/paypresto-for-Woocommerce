@@ -45,11 +45,14 @@ class Ajax {
             $gateway_info = [];
 
             foreach( $payment_gateways as $gateway_id => $gateway ){
-                $title = $gateway->get_title();
-                $description = $gateway->get_description();
-                $paypresto_api = $gateway->settings['paypresto_api_key'];
-                $coin_ranking = $gateway->settings['coin_ranking_api_key'];
-                array_push($gateway_info, ['title' => $title, 'description' => $description, 'paypresto_api' => $paypresto_api, 'coin_ranking' => $coin_ranking ]);
+                if( $gateway_id == 'paypresto' ) {
+                    $title = $gateway->get_title();
+                    $description = $gateway->get_description();
+                    $paypresto_api = $gateway->settings['paypresto_api_key'];
+                    $coin_ranking = $gateway->settings['coin_ranking_api_key'];
+                    array_push($gateway_info, ['title' => $title, 'description' => $description, 'paypresto_api' => $paypresto_api, 'coin_ranking' => $coin_ranking ]);
+                }
+                
             }
             wp_send_json_success( [
                 'cart_items' => json_encode($data),
@@ -61,10 +64,12 @@ class Ajax {
     public function rt_payment_process(){
         global $woocommerce;
         $email = isset($_POST['customer_email']) ? $_POST['customer_email'] : '';
+        $first_name = isset($_POST['first_name']) ? $_POST['first_name'] : '';
+        $last_name = isset($_POST['last_name']) ? $_POST['last_name'] : '';
         $items = $woocommerce->cart->get_cart();
         $address = array(
-            'first_name' => '',
-            'last_name'  => '',
+            'first_name' => $first_name,
+            'last_name'  => $last_name,
             'company'    => '',
             'email'      => $email,
             'phone'      => '',

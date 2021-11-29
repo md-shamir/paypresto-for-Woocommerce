@@ -10,7 +10,7 @@ function init_paypresto_gateway(){
     
         public function __construct() {
             $this->id = "paypresto";
-            $this->icon = RT_PAYPRESTO_URL . '/images/paypresto.png';
+            // $this->icon = RT_PAYPRESTO_ASSETS . '/images/paypresto.png';
             $this->has_fields = false;
             $this->method_title = __('Paypresto', 'rt-paypresto');
             $this->description = __('Paypresto payment gateway for Woocommerce');
@@ -133,31 +133,32 @@ function init_paypresto_gateway(){
     }
     
 }
-remove_action( 'woocommerce_checkout_order_review', 'woocommerce_order_review', 10 );
-add_filter('woocommerce_order_button_html', '__return_false' );
-add_filter( 'woocommerce_cart_needs_payment', '__return_false' );
+// remove_action( 'woocommerce_checkout_order_review', 'woocommerce_order_review', 10 );
+// add_filter('woocommerce_order_button_html', '__return_false' );
+// add_filter( 'woocommerce_cart_needs_payment', '__return_false' );
 add_action('woocommerce_after_checkout_form', function(){
     echo '<div id="rt-frontend-app"></div>';
 });
 
 // add_action('wp_footer', function(){
-//     $wc_gateways      = new WC_Payment_Gateways();
+//     WC()->cart->add_to_cart(1201);
+// });
+// add_action('wp_footer', function(){
+//     $wc_gateways      = new \WC_Payment_Gateways();
 //     $payment_gateways = $wc_gateways->get_available_payment_gateways();
 
 //     // Loop through Woocommerce available payment gateways
-//     foreach( $payment_gateways as $gateway_id => $gateway ){
-//         $title = $gateway->get_title();
-//         $description = $gateway->get_description();
-//         $paypresto_api = $gateway->settings['paypresto_api_key'];
-//         $coin_ranking = $gateway->settings['coin_ranking_api_key'];
-//         echo $coin_ranking;
-//     }
-// });
-// add_action( 'wp_ajax_rt_checkout_process', 'rt_checkout_process' );
-// add_action( 'wp_ajax_nopriv_rt_checkout_process', 'rt_checkout_process' );
+//     $gateway_info = [];
 
-// function rt_checkout_process(){
-//     echo json_encode(["Hello world"]);
-//     exit;
-    
-// }
+//     foreach( $payment_gateways as $gateway_id => $gateway ){
+//         if( $gateway_id == 'paypresto' ) {
+//             $title = $gateway->get_title();
+//             $description = $gateway->get_description();
+//             $paypresto_api = $gateway->settings['paypresto_api_key'];
+//             $coin_ranking = $gateway->settings['coin_ranking_api_key'];
+//             array_push($gateway_info, ['title' => $title, 'description' => $description, 'paypresto_api' => $paypresto_api, 'coin_ranking' => $coin_ranking ]);
+//         }
+        
+//     }
+
+// });

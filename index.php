@@ -63,7 +63,7 @@
     public function init_plugin(){
         new \PFW\RT\Assets();
         new \PFW\RT\Frontend\Ajax();
-        new \PFW\RT\Api();
+        //new \PFW\RT\Api();
 
         if( is_admin() ) {
             new \PFW\RT\Admin();

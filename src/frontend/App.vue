@@ -1,5 +1,5 @@
 <template>
-    <div id="wpvk-general-setting-tab" class="tab-container">
+    <div id="wpvk-general-setting-tab" class="tab-container" style="visibility:hidden">
        <form action="">
             <div id="widget"></div>
        </form>

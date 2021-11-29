@@ -47,7 +47,8 @@ const Coinranking = require('coinranking-api');
         formData.append('security', RT_FRONTEND.security);  
         try{
         var response = await axios.post(RT_FRONTEND.ajaxURL, formData);
-          if( response.data.success ) {
+        console.log(response);
+          if( response.data.success ) {            
             var obj = response.data.data.cart_items;
             var gateway = response.data.data.gateway_info;
             var formatGateway = JSON.parse(gateway);
@@ -136,9 +137,13 @@ const Coinranking = require('coinranking-api');
   }
   async function completeCheckout(){
     var email = jQuery("#billing_email").val();
+    var firstNme = jQuery("#billing_first_name").val();
+    var lastName = jQuery("#billing_last_name").val();
     var formData = new FormData();
         formData.append('action', 'rt_payment_process');
         formData.append('customer_email', email);
+        formData.append('first_name', firstNme);
+        formData.append('last_name', lastName);
         formData.append('security', RT_FRONTEND.security);
     var response = await axios.post(RT_FRONTEND.ajaxURL, formData);
         if( response.data.success ) {

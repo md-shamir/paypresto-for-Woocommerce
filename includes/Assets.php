@@ -54,6 +54,7 @@ class Assets {
         ];
     }
 
+    
     public function register_assets(){
         $scripts = $this->get_scripts();
         $styles = $this->get_styles();
