@@ -1,9 +1,9 @@
 <template>
   <div id="rt-lightbox">
    <div>
-  <b-button @click="openModal" v-b-modal.modal-center>Proceed to pay</b-button>
+  <b-button id="rt_place_order" @click="openModal" v-b-modal.modal-center>Proceed to pay</b-button>
 
-  <b-modal id="modal-center" centered title="Pay with Paypresto">
+  <b-modal id="modal-center" v-if="validated" hide-footer hide-header centered>
   <b-spinner class="spinner" v-if="spinner"></b-spinner>
     <div id="paypresto"></div>
   </b-modal>
@@ -20,6 +20,7 @@ const Coinranking = require('coinranking-api');
   export default {
     data() {
       return {
+        validated: false,
         title: '',
         description: '',
         payprestKey: '',
@@ -31,16 +32,22 @@ const Coinranking = require('coinranking-api');
       }
     },
     mounted(){
-      // $("#place_order").on("click", function(e){
-      //   e.preventDefault();
-
-      //   console.log("order placed");
-      // });
- 
     },
     methods: {
+  
     async openModal(){
-      var self = this;
+      var fname = $("#billing_first_name").val();
+      var lname = $("#billing_last_name").val();
+      var mail = jQuery("#billing_email").val();
+      if( fname !== "" && lname !== "" && mail !== "" ) {
+        this.validated = true;
+      } else {
+        $("form.woocommerce-checkout").prepend('<ul class="woocommerce-error"><li>Please fill out the required field(s)</li></ul>');
+        $("html, body").animate({ scrollTop: 0 });
+      }
+      
+      if( this.validated ) {
+        var self = this;
         this.spinner = true;
         var formData = new FormData();
         formData.append('action', 'rt_checkout_process');
@@ -102,6 +109,7 @@ const Coinranking = require('coinranking-api');
             console.log(error);
         }
 
+      }
        
       },
       checkFormValidity() {
@@ -121,7 +129,7 @@ const Coinranking = require('coinranking-api');
       },
       handleSubmit() {
         // Exit when the form isn't valid
-
+        
         if (!this.checkFormValidity()) {
           return
         }
@@ -161,9 +169,18 @@ const Coinranking = require('coinranking-api');
       margin: 1.75rem auto;
       max-width: 741px;
   }
-  .form-row.place-order {
-    display: none !important;
+  #rt_place_order {
+    float: right;
+    font-size: 20px;
+    border: 2px solid;
+    padding: 0.5em 1em;
+    background: transparent;
+    color: #2EA3F2;
   }
+.payment_method_paypresto img {
+  max-width: 200px;
+  height: auto;
+}
 
 </style>
 

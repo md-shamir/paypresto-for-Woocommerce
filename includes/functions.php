@@ -10,10 +10,10 @@ function init_paypresto_gateway(){
     
         public function __construct() {
             $this->id = "paypresto";
-            // $this->icon = RT_PAYPRESTO_ASSETS . '/images/paypresto.png';
-            $this->has_fields = false;
+            $this->icon = $this->get_option('logo') ? $this->get_option('logo') : '';
+            $this->has_fields = true;
             $this->method_title = __('Paypresto', 'rt-paypresto');
-            $this->description = __('Paypresto payment gateway for Woocommerce');
+            $this->method_description = __('Pay with Paypresto', 'rt-paypresto');
             $this->supports = array(
                 'products'
             );
@@ -21,7 +21,7 @@ function init_paypresto_gateway(){
             $this->init_form_fields();
             $this->init_settings();
             $this->title = $this->get_option('title');
-            $this->description = $this->get_option( 'description' );
+            $this->method_description = $this->get_option('description') ? $this->get_option('description') : '';
             $this->enabled = $this->get_option('enabled');
             $this->paypresto_api =  $this->get_option('paypresto_api_key') ? $this->get_option( 'paypresto_api_key' ) : '';
             $this->coin_ranking_api = $this->get_option( 'test_publishable_key' ) ? $this->get_option('publishable_key') : '';
@@ -34,15 +34,15 @@ function init_paypresto_gateway(){
             $this->form_fields = array(
                 'enabled' => array(
                     'title' => 'Enable/Disable',
-                    'label' => 'Enable Payprest',
+                    'label' => 'Enable Paypresto',
                     'type' => 'checkbox',
-                    'description' => __('Please enable Payprest payment gateway for your store payment gateway'),
+                    'description' => __('Enable Paypresto payment gateway for your store', 'rt-paypresto'),
                     'default' => 'no'
                 ),
                 'title' => array(
-                    'title' => 'Title',
+                    'title' => 'Memo',
                     'type' => 'text',
-                    'description' => 'Please enter name of your payment gateway',
+                    'description' => 'Customer sets memo information in orders here',
                     'default' => __('Credit Card', 'rt-paypresto'),
                     'desc_tip' => true
                 ),
@@ -61,12 +61,17 @@ function init_paypresto_gateway(){
                 //     'desc_tip' => true
                 // ),
                 'paypresto_api_key' => array(
-                    'title'       => __('Paypresto API key', 'rt-paypresto'),
+                    'title'       => __('Private Key', 'rt-paypresto'),
                     'type'        => 'password'
                 ),
                 'coin_ranking_api_key' => array(
                     'title'       => __('Coin Ranking API key', 'rt-paypresto'),
                     'type'        => 'password',
+                ),
+                'logo' => array(
+                    'title' => 'Logo',
+                    'type' => 'text',
+                    'description' => __('Please enter payment gateway logo url', 'rt-paypresto'),
                 ),
                 // 'publishable_key' => array(
                 //     'title'       => __('Live Publishable Key', 'rt-paypresto'),
@@ -83,18 +88,19 @@ function init_paypresto_gateway(){
             // ok, let's display some description before the payment form
             // if ( $this->description ) {
             //     // you can instructions for test mode, I mean test card numbers etc.
-            //     if ( $this->testmode ) {
-            //         $this->description .= ' TEST MODE ENABLED. In test mode, you can use the card numbers listed in <a href="#">documentation</a>.';
-            //         $this->description  = trim( $this->description );
-            //     }
+            //     // if ( $this->testmode ) {
+            //     //     $this->description .= ' TEST MODE ENABLED. In test mode, you can use the card numbers listed in <a href="#">documentation</a>.';
+            //     //     $this->description  = trim( $this->description );
+            //     // }
             //     // display the description with <p> tags etc.
             //     echo wpautop( wp_kses_post( $this->description ) );
             // }
             // do_action( 'woocommerce_credit_card_form_start', $this->id );
-            
             // echo '<div id="rt-frontend-app"></div>';
-        
-            // do_action( 'woocommerce_credit_card_form_end', $this->id );
+            if( $this->method_description ) {
+                echo wpautop( wp_kses_post( $this->method_description ) );
+            }
+            do_action( 'woocommerce_credit_card_form_end', $this->id );
  
         }
     
@@ -133,32 +139,11 @@ function init_paypresto_gateway(){
     }
     
 }
-// remove_action( 'woocommerce_checkout_order_review', 'woocommerce_order_review', 10 );
-// add_filter('woocommerce_order_button_html', '__return_false' );
-// add_filter( 'woocommerce_cart_needs_payment', '__return_false' );
+
 add_action('woocommerce_after_checkout_form', function(){
     echo '<div id="rt-frontend-app"></div>';
 });
 
 // add_action('wp_footer', function(){
 //     WC()->cart->add_to_cart(1201);
-// });
-// add_action('wp_footer', function(){
-//     $wc_gateways      = new \WC_Payment_Gateways();
-//     $payment_gateways = $wc_gateways->get_available_payment_gateways();
-
-//     // Loop through Woocommerce available payment gateways
-//     $gateway_info = [];
-
-//     foreach( $payment_gateways as $gateway_id => $gateway ){
-//         if( $gateway_id == 'paypresto' ) {
-//             $title = $gateway->get_title();
-//             $description = $gateway->get_description();
-//             $paypresto_api = $gateway->settings['paypresto_api_key'];
-//             $coin_ranking = $gateway->settings['coin_ranking_api_key'];
-//             array_push($gateway_info, ['title' => $title, 'description' => $description, 'paypresto_api' => $paypresto_api, 'coin_ranking' => $coin_ranking ]);
-//         }
-        
-//     }
-
 // });
