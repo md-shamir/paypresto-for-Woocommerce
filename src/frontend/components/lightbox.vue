@@ -15,6 +15,7 @@
 import {Presto, embed} from 'paypresto.js'
 import axios from 'axios';
 const Coinranking = require('coinranking-api');
+var validator = require("email-validator");
 
 
   export default {
@@ -40,7 +41,12 @@ const Coinranking = require('coinranking-api');
       var lname = $("#billing_last_name").val();
       var mail = jQuery("#billing_email").val();
       if( fname !== "" && lname !== "" && mail !== "" ) {
+        if( ! validator.validate(mail) ) {
+          $("form.woocommerce-checkout").prepend('<ul class="woocommerce-error"><li>Please enter a valid email</li></ul>');
+          $("html, body").animate({ scrollTop: 0 });
+        } else {
         this.validated = true;
+        }
       } else {
         $("form.woocommerce-checkout").prepend('<ul class="woocommerce-error"><li>Please fill out the required field(s)</li></ul>');
         $("html, body").animate({ scrollTop: 0 });

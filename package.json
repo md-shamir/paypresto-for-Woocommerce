@@ -17,6 +17,7 @@
     "bsv": "^2.0.10",
     "coingecko-api": "^1.0.10",
     "coinranking-api": "^1.0.0",
+    "email-validator": "^2.0.4",
     "nomics": "github:mikunimaru/nomics",
     "paypresto.js": "^0.1.0-beta.13",
     "txforge": "^0.2.5",

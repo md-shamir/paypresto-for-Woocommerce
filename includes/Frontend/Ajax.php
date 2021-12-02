@@ -81,6 +81,8 @@ class Ajax {
             'country'    => ''
         );
         $order = wc_create_order();
+        $cart = WC()->cart;
+        $total_price = 0;
         foreach($items as $item => $values) { 
             $product_id =  $values['data']->get_id();
             //product image
@@ -92,9 +94,13 @@ class Ajax {
             $price = get_post_meta($product_id, '_price', true);
             $regular_price = get_post_meta($product_id, '_regular_price', true);
             $sale_price = get_post_meta($product_id, '_sale_price', true);
+            $total_price += $price * $quantity;
+            $product_price = $cart->get_product_price($product);
+            $product->set_price( $product_price );
             $order->add_product( $product,  $quantity);
         }
         $order->set_address($address, 'billing');
+        $order->set_total($total_price, 'total');
         $order->update_status('completed', true );
         WC()->cart->empty_cart();
         // $new_order->set_address($address, 'shipping');
