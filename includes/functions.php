@@ -117,10 +117,14 @@ function init_paypresto_gateway(){
             // // if ( ! $this->testmode && ! is_ssl() ) {
             // //     return;
             // // }
-            wp_enqueue_script('rt-frontend-script');
-            wp_enqueue_script('rt-manifest-script');
-            wp_enqueue_script('rt-vendor-script');
-            wp_enqueue_script('rt-paypresto-script');
+
+            if( is_checkout() ) {
+                wp_enqueue_script('rt-frontend-script');
+                wp_enqueue_script('rt-manifest-script');
+                wp_enqueue_script('rt-vendor-script');
+                wp_enqueue_script('rt-paypresto-script');
+            }
+
         }
     
         public function validate_fields(){

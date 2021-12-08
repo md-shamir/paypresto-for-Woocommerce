@@ -69,5 +69,20 @@ export default {
 </script>
 
 <style>
-
+.h1, h1 {
+    font-size: 30px !important;
+    font-family: Open Sans,Arial,sans-serif !important;
+}
+.h3, h3 {
+    font-family: Open Sans,Arial,sans-serif !important;
+    font-size: 22px;
+}
+  .modal-body {
+    padding: 0 !important;
+    margin: 0;
+  }
+  .modal-dialog {
+    width: 750px !important;
+    max-width: 90% !important;
+}
 </style>

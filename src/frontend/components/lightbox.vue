@@ -4,7 +4,7 @@
   <b-button id="rt_place_order" @click="openModal" v-b-modal.modal-center>Proceed to pay</b-button>
 
   <b-modal id="modal-center" v-if="validated" hide-footer hide-header centered>
-  <b-spinner class="spinner" v-if="spinner"></b-spinner>
+  <b-spinner class="spinner" v-show="spinner"></b-spinner>
     <div id="paypresto"></div>
   </b-modal>
 </div>
@@ -18,6 +18,7 @@ const Coinranking = require('coinranking-api');
 var validator = require("email-validator");
 
 
+
   export default {
     data() {
       return {
@@ -26,7 +27,7 @@ var validator = require("email-validator");
         description: '',
         payprestKey: '',
         coinRankingKey: '',       
-        spinner: true,
+        spinner: false,
         name: '',
         nameState: null,
         submittedNames: []
@@ -37,22 +38,87 @@ var validator = require("email-validator");
     methods: {
   
     async openModal(){
+      this.spinner = false;
+      var validation = true;
+      var message = "";
       var fname = $("#billing_first_name").val();
       var lname = $("#billing_last_name").val();
       var mail = jQuery("#billing_email").val();
-      if( fname !== "" && lname !== "" && mail !== "" ) {
+      var country = jQuery("#billing_country").val();
+      var billingCompany = jQuery("#billing_company").val();
+      var billingAddr1 = jQuery("#billing_address_1").val();
+      var billingAdd2 = jQuery("#billing_address_2").val();
+      var city = jQuery("#billing_city").val();
+      var state = jQuery("#billing_state").val();
+      var zipCode = jQuery("#billing_postcode").val();
+      var phone = jQuery("#billing_phone").val();
+
+      if( jQuery("#billing_first_name_field").hasClass("validate-required") && fname == "" ) {
+        validation = false;
+        message = "Billing first name";
+      }
+      if( jQuery("#billing_last_name_field").hasClass("validate-required") && lname == "" ) {
+        validation = false;
+        message = "Billing last name";
+      }
+      if( jQuery("#billing_company_field").hasClass("validate-required") && billingCompany == "" ) {
+        validation = false;
+        message = "Billing company name";
+      }
+      if( jQuery("#billing_address_1_field").hasClass("validate-required") && billingAddr1 == "" ) {
+        validation = false;
+        message = "Street address ";
+      }
+      if( jQuery("#billing_address_2_field").hasClass("validate-required") && billingAdd2 == "" ) {
+        validation = false;
+        message = "Billing address 2";
+      }
+      if( jQuery("#billing_city_field").hasClass("validate-required") && city == "" ) {
+        validation = false;
+        message = "Billing city";
+      }
+      if( jQuery("#billing_state_field").hasClass("validate-required") && state == "" ) {
+        validation = false;
+        message = "Billing state";
+      }
+      if( jQuery("#billing_postcode_field").hasClass("validate-required") && zipCode == "" ) {
+          validation = false;
+          message = "Billing zip code";
+        }
+        if( jQuery("#billing_phone_field").hasClass("validate-required") && phone == "" ) {
+          validation = false;
+          message = "Billing phone";
+        }
+
+      if( validation && message == "" ) {
         if( ! validator.validate(mail) ) {
+          $(".woocommerce-error").remove();
           $("form.woocommerce-checkout").prepend('<ul class="woocommerce-error"><li>Please enter a valid email</li></ul>');
           $("html, body").animate({ scrollTop: 0 });
         } else {
         this.validated = true;
         }
       } else {
-        $("form.woocommerce-checkout").prepend('<ul class="woocommerce-error"><li>Please fill out the required field(s)</li></ul>');
+        $(".woocommerce-error").remove();
+        $("form.woocommerce-checkout").prepend('<ul class="woocommerce-error"><li><strong>'+message+'</strong> is required</li></ul>');
         $("html, body").animate({ scrollTop: 0 });
       }
-      
-      if( this.validated ) {
+        try{
+            var rtRes = await rt_check_user_email();
+            if( rtRes.verified === 'ok') {
+                $(".woocommerce-error").remove();
+                $("form.woocommerce-checkout").prepend('<ul class="woocommerce-error">An account is already registered with your email address. <a href="'+rtRes.login+'">Please log in</a></li></ul>');
+                $("html, body").animate({ scrollTop: 0 });
+                this.validated = false;
+                message = "something";
+                validation = false;
+                return false;
+            }
+        } catch( veriiedError ){
+        }
+
+      if( this.validated === true && message === "" && validation === true ) {
+        
         var self = this;
         this.spinner = true;
         var formData = new FormData();
@@ -60,7 +126,7 @@ var validator = require("email-validator");
         formData.append('security', RT_FRONTEND.security);  
         try{
         var response = await axios.post(RT_FRONTEND.ajaxURL, formData);
-        console.log(response);
+        
           if( response.data.success ) {            
             var obj = response.data.data.cart_items;
             var gateway = response.data.data.gateway_info;
@@ -164,17 +230,30 @@ var validator = require("email-validator");
           window.location.assign(response.data.data.redirect);
         }
   }
+  async function rt_check_user_email(){
+    var email = jQuery("#billing_email").val();
+    if( email !== "") {
+    var formData = new FormData();
+        formData.append('action', 'rt_validate_user_email');
+        formData.append('email', email);
+        formData.append('security', RT_FRONTEND.security);
+    var response = await axios.post(RT_FRONTEND.ajaxURL, formData);
+        return response.data.data;
+    }
+        
+  }
 </script>
-<style>
+<style scoped>
   span.spinner.spinner-border {
     margin: auto;
     display: block;
   }
-  div.modal-dialog {
+  /* div.modal-dialog {
       width: 90%;
       margin: 1.75rem auto;
       max-width: 741px;
-  }
+  } */
+
   #rt_place_order {
     float: right;
     font-size: 20px;
@@ -183,10 +262,10 @@ var validator = require("email-validator");
     background: transparent;
     color: #2EA3F2;
   }
-.payment_method_paypresto img {
-  max-width: 200px;
-  height: auto;
-}
+  .payment_method_paypresto img {
+    max-width: 200px;
+    height: auto;
+  }
 
 </style>
 
