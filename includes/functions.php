@@ -86,7 +86,7 @@ function init_paypresto_gateway(){
     
         public function payment_fields(){
             // ok, let's display some description before the payment form
-            // if ( $this->description ) {
+            // if ( $this->method_description ) {
             //     // you can instructions for test mode, I mean test card numbers etc.
             //     // if ( $this->testmode ) {
             //     //     $this->description .= ' TEST MODE ENABLED. In test mode, you can use the card numbers listed in <a href="#">documentation</a>.';
@@ -95,11 +95,11 @@ function init_paypresto_gateway(){
             //     // display the description with <p> tags etc.
             //     echo wpautop( wp_kses_post( $this->description ) );
             // }
-            // do_action( 'woocommerce_credit_card_form_start', $this->id );
-            // echo '<div id="rt-frontend-app"></div>';
+            do_action( 'woocommerce_credit_card_form_start', $this->id );
             if( $this->method_description ) {
                 echo wpautop( wp_kses_post( $this->method_description ) );
             }
+            echo '<div id="rt-paypresto"></div>';
             do_action( 'woocommerce_credit_card_form_end', $this->id );
  
         }
@@ -119,10 +119,14 @@ function init_paypresto_gateway(){
             // // }
 
             if( is_checkout() ) {
-                wp_enqueue_script('rt-frontend-script');
-                wp_enqueue_script('rt-manifest-script');
-                wp_enqueue_script('rt-vendor-script');
-                wp_enqueue_script('rt-paypresto-script');
+                // wp_enqueue_script('rt-frontend-script');
+                // wp_enqueue_script('rt-manifest-script');
+                // wp_enqueue_script('rt-vendor-script');
+                // wp_enqueue_script('rt-paypresto-script');
+                wp_enqueue_script( 'bsv', 'https://unpkg.com/bsv', array(), null, false );
+                wp_enqueue_script( 'txforge', 'https://unpkg.com/txforge', array(), null, false );
+                wp_enqueue_script( 'paypresto', 'https://unpkg.com/paypresto.js', array(), null, false );
+                wp_enqueue_script('rt-script');
             }
 
         }

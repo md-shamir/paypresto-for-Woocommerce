@@ -24,6 +24,11 @@ class Assets {
                 'version' => filemtime( RT_PAYPRESTO_PATH . '/assets/js/paypresto.js' ),
                 'deps' => [ 'jquery' ]
             ],
+            'rt-script' => [
+                'src' => RT_PAYPRESTO_ASSETS . '/js/script.js',
+                'version' => filemtime( RT_PAYPRESTO_PATH . '/assets/js/script.js' ),
+                'deps' => [ 'jquery' ]
+            ],
             'rt-manifest-script' => [
                 'src' => RT_PAYPRESTO_ASSETS . '/js/manifest.js',
                 'version' => filemtime( RT_PAYPRESTO_PATH . '/assets/js/manifest.js' ),

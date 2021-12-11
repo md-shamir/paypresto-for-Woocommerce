@@ -1,7 +1,8 @@
 (function($){
 
     // $("input[name='payment_method']").parent().each(function(index, item){
-    //     if( $(item).hasClass("payment_method_paypresto")) {
+    //     var payprestoButton = $(item).find('#payment_method_paypresto').prop("checked");
+    //     if( payprestoButton !== false ) {
     //         var proceedToPay = $('#wpvk-general-setting-tab').detach();
     //         $('.place-order').append(proceedToPay); 
     //         $("#wpvk-general-setting-tab").css("visibility", "visible");

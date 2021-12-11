@@ -38,6 +38,9 @@ var validator = require("email-validator");
     methods: {
   
     async openModal(){
+      const CoinrankingClient = new Coinranking();
+            let convert = await CoinrankingClient.coins.fetch(1509, {base: 'BSV'}) // usd uuid yhjMzLPhuIDl
+            console.log(convert);
       this.spinner = false;
       var validation = true;
       var message = "";
@@ -54,40 +57,40 @@ var validator = require("email-validator");
       var phone = jQuery("#billing_phone").val();
 
       if( jQuery("#billing_first_name_field").hasClass("validate-required") && fname == "" ) {
-        validation = false;
         message = "Billing first name";
+        validation = false;
       }
       if( jQuery("#billing_last_name_field").hasClass("validate-required") && lname == "" ) {
-        validation = false;
         message = "Billing last name";
+        validation = false;
       }
       if( jQuery("#billing_company_field").hasClass("validate-required") && billingCompany == "" ) {
-        validation = false;
         message = "Billing company name";
+        validation = false;
       }
       if( jQuery("#billing_address_1_field").hasClass("validate-required") && billingAddr1 == "" ) {
-        validation = false;
         message = "Street address ";
+        validation = false;
       }
       if( jQuery("#billing_address_2_field").hasClass("validate-required") && billingAdd2 == "" ) {
-        validation = false;
         message = "Billing address 2";
+        validation = false;
       }
       if( jQuery("#billing_city_field").hasClass("validate-required") && city == "" ) {
-        validation = false;
         message = "Billing city";
+        validation = false;
       }
       if( jQuery("#billing_state_field").hasClass("validate-required") && state == "" ) {
         validation = false;
         message = "Billing state";
       }
       if( jQuery("#billing_postcode_field").hasClass("validate-required") && zipCode == "" ) {
-          validation = false;
           message = "Billing zip code";
+          validation = false;
         }
         if( jQuery("#billing_phone_field").hasClass("validate-required") && phone == "" ) {
-          validation = false;
           message = "Billing phone";
+          validation = false;
         }
 
       if( validation && message == "" ) {
@@ -142,6 +145,7 @@ var validator = require("email-validator");
             });
             const CoinrankingClient = new Coinranking();
             let convert = await CoinrankingClient.coins.fetch(1509, {base: 'BSV'}) // usd 1509
+            
             let bsv = convert.data.data.coin.price * totalPrice;
             let sats = bsv * 100000000;
             let formatSats = Math.round(sats);
