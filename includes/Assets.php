@@ -24,6 +24,16 @@ class Assets {
                 'version' => filemtime( RT_PAYPRESTO_PATH . '/assets/js/paypresto.js' ),
                 'deps' => [ 'jquery' ]
             ],
+            'rt-axios' => [
+                'src' => 'https://unpkg.com/axios/dist/axios.min.js',
+                'version' => filemtime( RT_PAYPRESTO_PATH . '/assets/js/script.js' ),
+                'deps' => [ 'jquery' ]
+            ],
+            'rt-modal' => [
+                'src' => 'https://unpkg.com/micromodal/dist/micromodal.min.js',
+                'version' => filemtime( RT_PAYPRESTO_PATH . '/assets/js/script.js' ),
+                'deps' => [ 'jquery' ]
+            ],
             'rt-script' => [
                 'src' => RT_PAYPRESTO_ASSETS . '/js/script.js',
                 'version' => filemtime( RT_PAYPRESTO_PATH . '/assets/js/script.js' ),
@@ -63,7 +73,7 @@ class Assets {
     public function register_assets(){
         $scripts = $this->get_scripts();
         $styles = $this->get_styles();
-        $site_url = site_url() . '/index.php';
+        $site_url = site_url();
 
         foreach( $scripts as $handle => $script ){
             $deps = isset( $scripts['deps'] ) ? $script['deps'] : false;
@@ -81,12 +91,5 @@ class Assets {
             'error'   => __( 'Something went wrong', 'wedevs-academy' ),
         ] );
 
-        wp_localize_script( 'rt-paypresto-script', 'RT_FRONTEND', [
-            'adminURL' => admin_url( '/' ),
-            'ajaxURL' => admin_url( 'admin-ajax.php' ),
-            'apiURL'  => $site_url . '/wp-json',
-            'error'   => __( 'Something went wrong', 'wedevs-academy' ),
-            'security' => wp_create_nonce('rt-checkout-action'),
-        ] );
     }
 } 

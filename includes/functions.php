@@ -99,8 +99,17 @@ function init_paypresto_gateway(){
             if( $this->method_description ) {
                 echo wpautop( wp_kses_post( $this->method_description ) );
             }
-            echo '<div id="rt-paypresto"></div>';
+            $modal = '';
+            $modal .= '<div class="modal micromodal-slide" id="rt-paypresto" aria-hidden="true">';
+                $modal .= '<div class="modal__overlay" tabindex="-1" data-micromodal-close>';
+                    $modal .= '<div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">';
+                        $modal .= '<div id="paypresto_widget"></div>';
+                    $modal .= '</div>';
+                $modal .= '</div>';
+            $modal .= '</div>';
+            echo $modal;
             do_action( 'woocommerce_credit_card_form_end', $this->id );
+            
  
         }
     
@@ -119,20 +128,32 @@ function init_paypresto_gateway(){
             // // }
 
             if( is_checkout() ) {
-                // wp_enqueue_script('rt-frontend-script');
-                // wp_enqueue_script('rt-manifest-script');
-                // wp_enqueue_script('rt-vendor-script');
-                // wp_enqueue_script('rt-paypresto-script');
                 wp_enqueue_script( 'bsv', 'https://unpkg.com/bsv', array(), null, false );
                 wp_enqueue_script( 'txforge', 'https://unpkg.com/txforge', array(), null, false );
                 wp_enqueue_script( 'paypresto', 'https://unpkg.com/paypresto.js', array(), null, false );
-                wp_enqueue_script('rt-script');
+                wp_enqueue_script( 'rt-axios' );
+                wp_enqueue_script( 'rt-modal' );
+                wp_enqueue_script( 'rt-script' );
+                wp_enqueue_style( 'rt-frontend-style' );
+
+
+                wp_localize_script( 'rt-script', 'RT_FRONTEND', [
+                    'adminURL' => admin_url( '/' ),
+                    'ajaxURL' => admin_url( 'admin-ajax.php' ),
+                    'apiURL'  => site_url() . '/wp-json',
+                    'error'   => __( 'Something went wrong', 'wedevs-academy' ),
+                    'security' => wp_create_nonce('rt-checkout-action'),
+                    'payprestoApiKey' => $this->paypresto_api,
+                    'coinrankingApiKey' => $this->get_option('coin_ranking_api_key'),
+                    'title' => $this->title,
+                    'description' => $this->method_description
+                ] );
             }
 
         }
     
         public function validate_fields(){
-    
+            return true;
         }
     
         public function process_payment( $order_id ){
@@ -148,11 +169,15 @@ function init_paypresto_gateway(){
     
 }
 
-add_action('woocommerce_after_checkout_form', function(){
-    echo '<div id="rt-frontend-app"></div>';
-});
+// add_action('woocommerce_after_checkout_form', function(){
+//     require_once RT_PAYPRESTO_PATH . "/includes/Frontend/views/micromodal.php";
+// });
+
+
+// add_action('wp_head', function(){
+//     echo '<div id="rt-paypresto"></div>';
+// });
 
 // add_action('wp_footer', function(){
 //     WC()->cart->add_to_cart(1201);
 // });
-
