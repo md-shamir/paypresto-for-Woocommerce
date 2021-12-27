@@ -106,15 +106,16 @@ class Ajax {
     }
 
     public function rt_validate_user_email(){
-        $email = isset($_POST['email']) ? $_POST['email'] : '';
-        $verified = email_exists($email);
-        if( !is_user_logged_in() ) {
-            if( $verified ) {
-                wp_send_json_success([
-                    'verified' => 'ok',
-                    'login' => get_permalink( wc_get_page_id( 'myaccount' ) ),
-                ]);
-            }
+        if( is_user_logged_in() ) {
+            return;
+        }
+        $email = isset($_GET['email']) ? $_GET['email'] : '';
+        $exist = email_exists( $email );
+        if( ! empty($exist) ) {
+            wp_send_json_success([
+                'success' => true,
+                'login' => get_permalink( wc_get_page_id( 'myaccount' ) )
+            ]);
         }
     }
 

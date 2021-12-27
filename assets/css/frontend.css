@@ -169,3 +169,7 @@
 .micromodal-slide .modal__overlay {
   will-change: transform;
 }
+
+ul.woocommerce-error li strong {
+  text-transform: capitalize;
+}
