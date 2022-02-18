@@ -35,6 +35,7 @@ var validator = require("email-validator");
     },
     mounted(){
     },
+    
     methods: {
   
     async openModal(){

@@ -2,20 +2,18 @@
     <div id="wpvk-general-setting-tab" class="tab-container" style="visibility:hidden">
        <form action="">
             <div id="widget"></div>
+            <h2>Hello world hello worlds</h2>
        </form>
-       <lightbox/>
         <div class="clear"></div>
     </div>
 </template>
 
-
 <script>
-import {Presto, embed} from 'paypresto.js'
-import Lightbox from './components/lightbox.vue';
+const Coinranking = require('coinranking-api');
 
 export default {
     components: {
-        Lightbox
+        
     },
 
     // data() {
@@ -23,66 +21,29 @@ export default {
     // },
 
     mounted() {
-        // const payment = Presto.create({
-        //     key: '5KRBoTUQQtRwjJEPHz9MBou7UoMmUsb2afMSZR1QudF7UfctRSR',
-        //     description: 'My test payment',
-        //     outputs: [
-        //         { to: '1CBTGrChDDGsewF1eAV6FQyxRaSXRvUT7o', satoshis: 500 },
-        //         { data: [Buffer.from("Hello world!")] }
-        //     ]
-        //     })
+        // this.getSatoshiAmount();
+        const Coinranking = require('coinranking-api');
+        const CoinrankingClient = new Coinranking();
+        let data = CoinrankingClient.coins.all({});
+        console.log(data);
+    },
 
-        //     payment
-        //     .mount(embed('#widget'))
-        //     .on('funded', payment => payment.pushTx())
-        //     .on('success', txid => console.log('TX sent', txid))
-        //     .on('error', erro => console.log(erro));
-            // payment
-            // .on('invoice', invoice => console.log(invoice))
-            // .on('funded', payment => console.log(payment))
-            // .on('success', txid => payment.pushTx(txid))
-            // .on('error', err => console.log(err))
+    computed: {
 
     },
 
-    // computed: {
-    //     ...mapGetters([ 'GET_GENERAL_SETTINGS', 'GET_LOADING_TEXT' ]),
-
-    //     formData: {
-    //         get() {
-    //             return this.GET_GENERAL_SETTINGS
-    //         },
-    //     },
-
-    //     loadingText: {
-    //         get() {
-    //             return this.GET_LOADING_TEXT
-    //         }
-    //     }
-    // },
-
     methods: {
-        
+        getSatoshiAmount(){
+            const CoinrankingClient = new Coinranking();
+           jQuery(document).on("click", function(){
+                let convert = CoinrankingClient.coins.fetch(1509, {base: 'BSV'}) // usd 1509   yhjMzLPhuIDl - bsv VcMY11NONHSA0
+                let bsv = convert.data.data.coin.price * totalPrice;
+                let sats = bsv * 100000000;
+                let formatSats = Math.round(sats);
+                console.log(formatSats);
+           });
+        }
 
     }
 }
 </script>
-
-<style>
-.h1, h1 {
-    font-size: 30px !important;
-    font-family: Open Sans,Arial,sans-serif !important;
-}
-.h3, h3 {
-    font-family: Open Sans,Arial,sans-serif !important;
-    font-size: 22px;
-}
-  .modal-body {
-    padding: 0 !important;
-    margin: 0;
-  }
-  .modal-dialog {
-    width: 750px !important;
-    max-width: 90% !important;
-}
-</style>

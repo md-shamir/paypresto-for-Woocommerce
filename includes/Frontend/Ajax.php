@@ -66,21 +66,24 @@ class Ajax {
 
     public function rt_payment_process(){
         global $woocommerce;
-        $email = isset($_POST['customer_email']) ? $_POST['customer_email'] : '';
-        $first_name = isset($_POST['first_name']) ? $_POST['first_name'] : '';
-        $last_name = isset($_POST['last_name']) ? $_POST['last_name'] : '';
+        // $email = isset($_POST['customer_email']) ? $_POST['customer_email'] : '';
+        // $first_name = isset($_POST['first_name']) ? $_POST['first_name'] : '';
+        // $last_name = isset($_POST['last_name']) ? $_POST['last_name'] : '';
+        $form_data = isset($_POST['form_data']) ? $_POST['form_data'] : '';
+        // echo json_encode($form_data['billing_first_name']);
+        // exit;
         $address = array(
-            'first_name' => $first_name,
-            'last_name'  => $last_name,
-            'company'    => '',
-            'email'      => $email,
-            'phone'      => '',
-            'address_1'  => '',
-            'address_2'  => '',
-            'city'       => '',
-            'state'      => '',
-            'postcode'   => '',
-            'country'    => ''
+            'first_name' => $form_data['billing_first_name'],
+            'last_name'  => $form_data['billing_last_name'],
+            'company'    => $form_data['billing_company'],
+            'email'      => $form_data['billing_email'],
+            'phone'      => $form_data['billing_phone'],
+            'address_1'  => $form_data['billing_address_1'],
+            'address_2'  => $form_data['billing_address_2'],
+            'city'       => $form_data['billing_city'],
+            'state'      => $form_data['billing_state'],
+            'postcode'   => $form_data['billing_postcode'],
+            'country'    => $form_data['billing_country'],
         );
 
         $order = wc_create_order();

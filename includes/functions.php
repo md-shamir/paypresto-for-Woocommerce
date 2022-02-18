@@ -24,7 +24,7 @@ function init_paypresto_gateway(){
             $this->method_description = $this->get_option('description') ? $this->get_option('description') : '';
             $this->enabled = $this->get_option('enabled');
             $this->paypresto_api =  $this->get_option('paypresto_api_key') ? $this->get_option( 'paypresto_api_key' ) : '';
-            $this->coin_ranking_api = $this->get_option( 'test_publishable_key' ) ? $this->get_option('publishable_key') : '';
+            $this->tonic_pow = $this->get_option( 'tonic_pow' ) ? $this->get_option('tonic_pow') : '';
             add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
             // We need custom JavaScript to obtain a token
             add_action( 'wp_enqueue_scripts', array( $this, 'payment_scripts' ) );
@@ -64,8 +64,8 @@ function init_paypresto_gateway(){
                     'title'       => __('Private Key', 'rt-paypresto'),
                     'type'        => 'password'
                 ),
-                'coin_ranking_api_key' => array(
-                    'title'       => __('Coin Ranking API key', 'rt-paypresto'),
+                'tonic_pow' => array(
+                    'title'       => __('TonicPow API key', 'rt-paypresto'),
                     'type'        => 'password',
                 ),
                 'logo' => array(
@@ -136,6 +136,13 @@ function init_paypresto_gateway(){
                 wp_enqueue_script( 'rt-script' );
                 wp_enqueue_style( 'rt-frontend-style' );
 
+                // echo '<div id="rt-frontend-app"></div>';
+                // wp_enqueue_script( 'rt-manifest-script' );
+                // wp_enqueue_script( 'rt-vendor-script' );
+                // wp_enqueue_script( 'rt-frontend-script' );
+
+
+
 
                 wp_localize_script( 'rt-script', 'RT_FRONTEND', [
                     'adminURL' => admin_url( '/' ),
@@ -144,7 +151,7 @@ function init_paypresto_gateway(){
                     'error'   => __( 'Something went wrong', 'wedevs-academy' ),
                     'security' => wp_create_nonce('rt-checkout-action'),
                     'payprestoApiKey' => $this->paypresto_api,
-                    'coinrankingApiKey' => $this->get_option('coin_ranking_api_key'),
+                    'tonic_pow' => $this->get_option('tonic_pow'),
                     'title' => $this->title,
                     'description' => $this->method_description
                 ] );
@@ -169,15 +176,34 @@ function init_paypresto_gateway(){
     
 }
 
+
+add_action( 'woocommerce_before_order_notes', 'bbloomer_add_custom_checkout_field' );
+  
+function bbloomer_add_custom_checkout_field( $checkout ) { 
+    global $woocommerce;
+   woocommerce_form_field( 'cart_total', array(        
+    'type' => 'hidden',        
+    'class' => array( 'form-row-wide cart_total' ),        
+    'label' => '',        
+    'placeholder' => '',        
+    'required' => false,        
+    'default' => WC()->cart->total,        
+    ), $checkout->get_value( 'cart_total' ) ); 
+}
+
+
+
 // add_action('woocommerce_after_checkout_form', function(){
 //     require_once RT_PAYPRESTO_PATH . "/includes/Frontend/views/micromodal.php";
 // });
 
 
-// add_action('wp_head', function(){
-//     echo '<div id="rt-paypresto"></div>';
+// add_action('wp_footer', function(){
+//     echo '<div id="rt-frontend-app"></div>';
 // });
 
 // add_action('wp_footer', function(){
 //     WC()->cart->add_to_cart(1201);
 // });
+
+

@@ -61,7 +61,7 @@ var selectedPaymentMethod = jQuery('form[name="checkout"] input[name="payment_me
                     },
                     success: function(response) {
                         // verify email address
-                        console.log(response);
+                        // console.log(response);
                         if( response ) {
                             var html = '';
                             html += '<div class="woocommerce-NoticeGroup woocommerce-NoticeGroup-checkout">';
@@ -74,7 +74,7 @@ var selectedPaymentMethod = jQuery('form[name="checkout"] input[name="payment_me
                         } else {
                             // process checkout 
                             
-                            // processPayprestoCheckout();
+                            processPayprestoCheckout();
 
 
                         }
@@ -102,16 +102,31 @@ function isEmail(email) {
     return regex.test(email);
   }
 
-function processPayprestoCheckout(){
+async function processPayprestoCheckout(){
+    console.log(RT_FRONTEND)
     MicroModal.show("rt-paypresto");
     const Presto = window.Paypresto.Presto;
         const embed = window.Paypresto.embed;
-    
+        var sats = 0;
+        let cartTotal = $("#cart_total").val();
+        var settings = {
+            "url": "https://api.tonicpow.com/v1/rates/usd?amount=" + cartTotal,
+            "method": "GET",
+            "timeout": 0,
+            "headers": {
+              "api_key": RT_FRONTEND.tonic_pow
+            },
+          };
+          
+          await $.ajax(settings).done(function (response) {
+            sats = response.price_in_satoshis;
+          });
+        //   console.log(sats);
         const payment = Presto.create({
-        key: '5KRBoTUQQtRwjJEPHz9MBou7UoMmUsb2afMSZR1QudF7UfctRSR',
-        description: 'payment gateway title',
+        key: RT_FRONTEND.payprestoApiKey,
+        description: RT_FRONTEND.title,
         outputs: [
-            { to: '1CBTGrChDDGsewF1eAV6FQyxRaSXRvUT7o', satoshis: 5000 },//(satoshi 100000000x1.00000 bsv)
+            { to: '1CBTGrChDDGsewF1eAV6FQyxRaSXRvUT7o', satoshis: sats },//(satoshi 100000000x1.00000 bsv)
             // { data: [Buffer.from("Hello world!")] }
         ]
       })
@@ -125,24 +140,45 @@ function processPayprestoCheckout(){
         .on('invoice', invoice => console.log(invoice))
         .on('funded', function(funded){
             if( funded ) {
-            
-                // $.ajax({
-                //     type : "POST",
-                //     dataType : "json",
-                //     url : RT_FRONTEND.ajaxURL,
-                //     data : {
-                //         action: "rt_payment_process",
-                //     },
-                //     success: function( res ){
-                //         console.log( res );
-                //     },
-                //     error: function( err ){
-                //         console.log(err)
-                //     }
-                // });
-
-
-
+                // MicroModal.close();
+                // var checkout_form = $('form.woocommerce-checkout');
+                // checkout_form.submit();
+                // console.log('Payment success');
+                var fields = {};
+                var checkout_form = $('form.woocommerce-checkout');
+                var formData = checkout_form.serializeArray();
+                    $.each( formData, function(index, item){
+                        fields[item.name] = item.value;
+                    })
+                $.ajax({
+                    type : "POST",
+                    dataType : "json",
+                    url : RT_FRONTEND.ajaxURL,
+                    data : {
+                        action: "rt_payment_process",
+                        form_data: fields
+                    },
+                    success: function( res ){
+                        // console.log(res);
+                        // if( res.data.message === 'sucess') {
+                        //    setTimeout(() => {
+                        //     // MicroModal.close();
+                        //     var url = res.data.redirect;
+                        //     $(location).attr('href', url);
+                        //     window.location.assign(url);
+                        //     window.location.href = url;
+                        // }, 500);
+                        // }
+                        setTimeout(() => {
+                            // MicroModal.close();
+                            var url = res.data.redirect;
+                            window.location.assign(url);
+                        }, 500);
+                    },
+                    error: function( err ){
+                        console.log(err)
+                    }
+                });
 
             }
         })
@@ -153,23 +189,26 @@ function processPayprestoCheckout(){
 
 
 
-    function getSatoshiAmount(){
 
-        // const axios = window.axios;
-        // axios.get('https://api.coinranking.com/v2/coin/yhjMzLPhuIDl?referenceCurrencyUuid=VcMY11NONHSA0')
-        //     .then(( response ) => {
-        //         console.log( response )
-        // })
-        // .catch( (error) => {
-        //     // handle error
-        //     console.log(error);
-        //   })
+ 
 
+// jQuery(document).ready(function(){
+//     const bsv = $("#coinranking_price").val();
+//     let sats = ( 100000000 / bsv );
+//     let formatSats = sats.toString().slice(0, sats.toString().lastIndexOf('.'));
 
-
-    }
+//     let productPrice = ( 357 * formatSats );
+//     console.log(productPrice);
+// });
 
 
+// jQuery(document).ready(function(){
+//     const bsv = $("#coinranking_price").val();
+//     let cartTotal = $("#cart_total").val();
+//     let sats = ( 100000000 / bsv );
+//     let formatSats = sats.toString().slice(0, sats.toString().lastIndexOf('.'));
 
+//     let productPrice = ( cartTotal * sats );
+//     console.log(productPrice);
+// });
 
-    processPayprestoCheckout();
