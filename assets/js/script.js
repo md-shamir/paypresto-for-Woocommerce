@@ -126,7 +126,7 @@ async function processPayprestoCheckout(){
         key: RT_FRONTEND.payprestoApiKey,
         description: RT_FRONTEND.title,
         outputs: [
-            { to: '1CBTGrChDDGsewF1eAV6FQyxRaSXRvUT7o', satoshis: sats },//(satoshi 100000000x1.00000 bsv)
+            { to: RT_FRONTEND.payprestoPrivateKey, satoshis: sats },//(satoshi 100000000x1.00000 bsv)
             // { data: [Buffer.from("Hello world!")] }
         ]
       })
@@ -159,16 +159,6 @@ async function processPayprestoCheckout(){
                         form_data: fields
                     },
                     success: function( res ){
-                        // console.log(res);
-                        // if( res.data.message === 'sucess') {
-                        //    setTimeout(() => {
-                        //     // MicroModal.close();
-                        //     var url = res.data.redirect;
-                        //     $(location).attr('href', url);
-                        //     window.location.assign(url);
-                        //     window.location.href = url;
-                        // }, 500);
-                        // }
                         setTimeout(() => {
                             // MicroModal.close();
                             var url = res.data.redirect;

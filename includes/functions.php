@@ -24,6 +24,7 @@ function init_paypresto_gateway(){
             $this->method_description = $this->get_option('description') ? $this->get_option('description') : '';
             $this->enabled = $this->get_option('enabled');
             $this->paypresto_api =  $this->get_option('paypresto_api_key') ? $this->get_option( 'paypresto_api_key' ) : '';
+            $this->paypresto_private_key =  $this->get_option('paypresto_private_key') ? $this->get_option( 'paypresto_private_key' ) : '';
             $this->tonic_pow = $this->get_option( 'tonic_pow' ) ? $this->get_option('tonic_pow') : '';
             add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
             // We need custom JavaScript to obtain a token
@@ -61,7 +62,11 @@ function init_paypresto_gateway(){
                 //     'desc_tip' => true
                 // ),
                 'paypresto_api_key' => array(
-                    'title'       => __('Private Key', 'rt-paypresto'),
+                    'title'       => __('Paypresto API key', 'rt-paypresto'),
+                    'type'        => 'password'
+                ),
+                'paypresto_private_key' => array(
+                    'title'       => __('Paypresto Private Key', 'rt-paypresto'),
                     'type'        => 'password'
                 ),
                 'tonic_pow' => array(
@@ -151,6 +156,7 @@ function init_paypresto_gateway(){
                     'error'   => __( 'Something went wrong', 'wedevs-academy' ),
                     'security' => wp_create_nonce('rt-checkout-action'),
                     'payprestoApiKey' => $this->paypresto_api,
+                    'payprestoPrivateKey' => $this->paypresto_private_key,
                     'tonic_pow' => $this->get_option('tonic_pow'),
                     'title' => $this->title,
                     'description' => $this->method_description
