@@ -80,7 +80,6 @@ var selectedPaymentMethod = jQuery('form[name="checkout"] input[name="payment_me
                         }
                     },
                     error: function(error){
-                        console.log(error);
                     }
                 });
 
@@ -103,7 +102,7 @@ function isEmail(email) {
   }
 
 async function processPayprestoCheckout(){
-    console.log(RT_FRONTEND)
+
     MicroModal.show("rt-paypresto");
     const Presto = window.Paypresto.Presto;
         const embed = window.Paypresto.embed;
@@ -134,10 +133,10 @@ async function processPayprestoCheckout(){
         payment
         .mount(embed('#paypresto_widget'))
         .on('funded', payment => payment.pushTx())
-        .on('success', txid => console.log('TX sent', txid))
-        .on('error', erro => console.log(erro));
+        .on('success', txid => '')
+        .on('error', erro => '');
         payment
-        .on('invoice', invoice => console.log(invoice))
+        .on('invoice', invoice => '')
         .on('funded', function(funded){
             if( funded ) {
                 // MicroModal.close();
@@ -166,14 +165,14 @@ async function processPayprestoCheckout(){
                         }, 500);
                     },
                     error: function( err ){
-                        console.log(err)
+
                     }
                 });
 
             }
         })
         .on('success', txid => payment.pushTx(txid))
-        .on('error', err => console.log(err))
+        .on('error', err => '')
 
     }
 

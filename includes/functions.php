@@ -62,7 +62,7 @@ function init_paypresto_gateway(){
                 //     'desc_tip' => true
                 // ),
                 'paypresto_api_key' => array(
-                    'title'       => __('Paypresto API key', 'rt-paypresto'),
+                    'title'       => __('BitCoin Private Key', 'rt-paypresto'),
                     'type'        => 'password'
                 ),
                 'paypresto_private_key' => array(
